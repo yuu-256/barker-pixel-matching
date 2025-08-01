@@ -1,5 +1,5 @@
 CXX			 := g++
-CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Iinclude -Iexternal/HighFive/include
+CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Iinclude -Iexternal -Iexternal/HighFive/include
 
 HDF5_FLAGS := $(shell pkg-config --cflags hdf5)
 HDF5_LIBS	 := $(shell pkg-config --libs hdf5) -lhdf5_cpp
