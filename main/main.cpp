@@ -67,28 +67,63 @@ int main(int argc, char** argv) {
         size_t K = constructor.verticalLevels();
         size_t L = constructor.numVariables();
 
+        size_t i_min = 3500, i_max = 5500;
+        size_t j_min = 0, j_max = msi_data->longitude[0].size() - 1;
+        size_t H_out = i_max - i_min + 1;
+        size_t W_out = j_max - j_min + 1;
+
         for (size_t l = 0; l < L; ++l) {
-            std::vector<double> single_variable(H * W * K);
+            std::vector<double> single_variable(H_out * W_out * K);
             size_t offset = l;
 
-            for (size_t idx = 0; idx < H * W * K; ++idx) {
-                single_variable[idx] = mapped_data[idx * L + offset];
+            for (size_t i = 0; i < H_out; ++i) {
+                for (size_t j = 0; j < W_out; ++j) {
+                    for (size_t k = 0; k < K; ++k) {
+                        size_t src_idx = (((i + i_min) * W + (j + j_min)) * K + k) * L + offset;
+                        size_t dst_idx = (i * W_out + j) * K + k;
+                        single_variable[dst_idx] = mapped_data[src_idx];
+                    }
+                }
             }
             writer.writeDataset(variable_names[l],
                                 single_variable,
-                                {H, W, K});
+                                {H_out, W_out, K});
         }
-        
-        std::vector<double> latitude_variable(H * W);
-        std::vector<double> longitude_variable(H * W);
-        for (size_t idx = 0; idx < H * W; ++idx) {
-            size_t h = idx / W;
-            size_t w = idx % W;
+
+        std::vector<double> latitude_variable(H_out * W_out);
+        std::vector<double> longitude_variable(H_out * W_out);
+        for (size_t idx = 0; idx < H_out * W_out; ++idx) {
+            size_t h = idx / W_out;
+            size_t w = idx % W_out;
             latitude_variable[idx] = msi_data->latitude[h][w];
             longitude_variable[idx] = msi_data->longitude[h][w];
         }
-        writer.writeDataset("latitude", latitude_variable, {H, W});
-        writer.writeDataset("longitude", longitude_variable, {H, W});
+
+        writer.writeDataset("latitude", latitude_variable, {H_out, W_out});
+        writer.writeDataset("longitude", longitude_variable, {H_out, W_out});
+
+        // for (size_t l = 0; l < L; ++l) {
+        //     std::vector<double> single_variable(H * W * K);
+        //     size_t offset = l;
+
+        //     for (size_t idx = 0; idx < H * W * K; ++idx) {
+        //         single_variable[idx] = mapped_data[idx * L + offset];
+        //     }
+        //     writer.writeDataset(variable_names[l],
+        //                         single_variable,
+        //                         {H, W, K});
+        // }
+        
+        // std::vector<double> latitude_variable(H * W);
+        // std::vector<double> longitude_variable(H * W);
+        // for (size_t idx = 0; idx < H * W; ++idx) {
+        //     size_t h = idx / W;
+        //     size_t w = idx % W;
+        //     latitude_variable[idx] = msi_data->latitude[h][w];
+        //     longitude_variable[idx] = msi_data->longitude[h][w];
+        // }
+        // writer.writeDataset("latitude", latitude_variable, {H, W});
+        // writer.writeDataset("longitude", longitude_variable, {H, W});
 
         std::cout << "[main] Cloud construction completed successfully" << std::endl;
     }
