@@ -20,4 +20,3 @@ void HDF5_Writer::writeDataset(const std::string& name,
     H5::DataSet dataset = file_.createDataSet(name, H5::PredType::NATIVE_DOUBLE, dataspace);
     dataset.write(data.data(), H5::PredType::NATIVE_DOUBLE);
 }
-

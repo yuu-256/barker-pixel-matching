@@ -78,6 +78,18 @@ int main(int argc, char** argv) {
                                 single_variable,
                                 {H, W, K});
         }
+        
+        std::vector<double> latitude_variable(H * W);
+        std::vector<double> longitude_variable(H * W);
+        for (size_t idx = 0; idx < H * W; ++idx) {
+            size_t h = idx / W;
+            size_t w = idx % W;
+            latitude_variable[idx] = msi_data->latitude[h][w];
+            longitude_variable[idx] = msi_data->longitude[h][w];
+        }
+        writer.writeDataset("latitude", latitude_variable, {H, W});
+        writer.writeDataset("longitude", longitude_variable, {H, W});
+
         std::cout << "[main] Cloud construction completed successfully" << std::endl;
     }
     catch (const std::exception& e) {
