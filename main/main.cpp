@@ -95,8 +95,10 @@ int main(int argc, char** argv) {
         for (size_t idx = 0; idx < H_out * W_out; ++idx) {
             size_t h = idx / W_out;
             size_t w = idx % W_out;
-            latitude_variable[idx] = msi_data->latitude[h][w];
-            longitude_variable[idx] = msi_data->longitude[h][w];
+            size_t src_h = h + i_min;
+            size_t src_w = w + j_min;
+            latitude_variable[idx] = msi_data->latitude[src_h][src_w];
+            longitude_variable[idx] = msi_data->longitude[src_h][src_w];
         }
 
         writer.writeDataset("latitude", latitude_variable, {H_out, W_out});
