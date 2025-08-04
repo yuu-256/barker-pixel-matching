@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 
         // Construct cloud field //
         size_t k_candidates = 100;
-        size_t max_idx_distance = 400;
+        size_t max_idx_distance = 2000;
         size_t num_vartical_levels = acclp_data->height[0].size();
         size_t num_variables = 8;
 
@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         size_t K = constructor.verticalLevels();
         size_t L = constructor.numVariables();
 
-        size_t i_min = 3500, i_max = 5500;
+        size_t i_min = 3500, i_max = 5499;
         size_t j_min = 0, j_max = msi_data->longitude[0].size() - 1;
         size_t H_out = i_max - i_min + 1;
         size_t W_out = j_max - j_min + 1;
@@ -103,29 +103,6 @@ int main(int argc, char** argv) {
 
         writer.writeDataset("latitude", latitude_variable, {H_out, W_out});
         writer.writeDataset("longitude", longitude_variable, {H_out, W_out});
-
-        // for (size_t l = 0; l < L; ++l) {
-        //     std::vector<double> single_variable(H * W * K);
-        //     size_t offset = l;
-
-        //     for (size_t idx = 0; idx < H * W * K; ++idx) {
-        //         single_variable[idx] = mapped_data[idx * L + offset];
-        //     }
-        //     writer.writeDataset(variable_names[l],
-        //                         single_variable,
-        //                         {H, W, K});
-        // }
-        
-        // std::vector<double> latitude_variable(H * W);
-        // std::vector<double> longitude_variable(H * W);
-        // for (size_t idx = 0; idx < H * W; ++idx) {
-        //     size_t h = idx / W;
-        //     size_t w = idx % W;
-        //     latitude_variable[idx] = msi_data->latitude[h][w];
-        //     longitude_variable[idx] = msi_data->longitude[h][w];
-        // }
-        // writer.writeDataset("latitude", latitude_variable, {H, W});
-        // writer.writeDataset("longitude", longitude_variable, {H, W});
 
         std::cout << "[main] Cloud construction completed successfully" << std::endl;
     }
