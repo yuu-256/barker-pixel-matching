@@ -67,7 +67,7 @@ int main(int argc, char** argv) {
         size_t K = constructor.verticalLevels();
         size_t L = constructor.numVariables();
 
-        size_t i_min = 3500, i_max = 5499;
+        size_t i_min = 2500, i_max = 4499;
         size_t j_min = 0, j_max = msi_data->longitude[0].size() - 1;
         size_t H_out = i_max - i_min + 1;
         size_t W_out = j_max - j_min + 1;
