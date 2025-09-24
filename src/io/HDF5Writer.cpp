@@ -1,4 +1,4 @@
-#include "io/HDF5Writer.hpp"
+#include "HDF5Writer.hpp"
 #include <H5Cpp.h>
 #include <stdexcept>
 
@@ -15,6 +15,14 @@ void HDF5_Writer::writeDataset(const std::string& name,
 
 void HDF5_Writer::writeDataset(const std::string& name,
                                const std::vector<double>& data,
+                               const std::vector<size_t>& shape) {
+    H5::DataSpace dataspace(shape.size(), reinterpret_cast<const hsize_t*>(shape.data()));
+    H5::DataSet dataset = file_.createDataSet(name, H5::PredType::NATIVE_DOUBLE, dataspace);
+    dataset.write(data.data(), H5::PredType::NATIVE_DOUBLE);
+}
+
+void HDF5_Writer::writeDataset(const std::string& name,
+                               const std::vector<int>& data,
                                const std::vector<size_t>& shape) {
     H5::DataSpace dataspace(shape.size(), reinterpret_cast<const hsize_t*>(shape.data()));
     H5::DataSet dataset = file_.createDataSet(name, H5::PredType::NATIVE_DOUBLE, dataspace);

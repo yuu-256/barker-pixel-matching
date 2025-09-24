@@ -17,6 +17,11 @@ public:
                       const std::vector<double>& data,
                       const std::vector<size_t>& shape);
 
+    // int type dataset
+    void writeDataset(const std::string& name,
+                      const std::vector<int>& data,
+                      const std::vector<size_t>& shape);
+
 private:
     H5::H5File file_;
 };

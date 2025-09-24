@@ -35,3 +35,21 @@ struct AC_CLP_Data {
     std::vector<Spectrum> radiance;
 };
 
+
+struct AUX__2D_Data {
+    using Vec2D = std::vector<std::vector<double>>;
+
+    Vec2D ozoneMassMixingRatio;
+    Vec2D pressure;
+    Vec2D specificHumidity;
+    Vec2D temperature;
+    Vec2D height;
+
+    std::vector<double> surfacePressure;
+    std::vector<double> totalColumnOzone;
+    std::vector<double> totalColumnWaterVapor;
+    std::vector<int> day_night_flag;  // 1: day, 0: night
+    std::vector<int> land_water_flag; // 1: land, 0: water
+    std::vector<double> longitude;
+    std::vector<double> latitude;
+};

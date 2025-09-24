@@ -1,15 +1,19 @@
-#include "process/CloudConstructor.hpp"
+#include "CloudConstructor.hpp"
 #include <iostream>
 #include <cmath>
 
 CloudConstructor::CloudConstructor(const MSI_RGR_Data* msi_data,
                                    AC_CLP_Data* acclp_data,
+                                   const AUX__2D_Data* aux2d_data,
                                    size_t k_candidates,
                                    size_t max_idx_distance,
                                    size_t num_vertical_levels,
-                                   size_t num_variables)
+                                   size_t num_variables,
+                                   size_t i_min, size_t i_max,
+                                   size_t j_min, size_t j_max)
     : msi_(msi_data), 
       acclp_(acclp_data),
+      aux2d_(aux2d_data),
       k_candidates_(k_candidates),
       max_idx_distance_(max_idx_distance),
       AC_LogSpectralKDTree_(),
@@ -20,7 +24,11 @@ CloudConstructor::CloudConstructor(const MSI_RGR_Data* msi_data,
       H_(msi_data->longitude.size()),
       W_(msi_data->longitude[0].size()),
       K_(num_vertical_levels),
-      L_(num_variables)
+      L_(num_variables),
+      H_out_(i_max - i_min + 1),
+      W_out_(j_max - j_min + 1),
+      i_min_(i_min), i_max_(i_max),
+      j_min_(j_min), j_max_(j_max)
 {
     std::cout << "[CloudConstructor] Using k_candidates: " << k_candidates_ << std::endl;
     std::cout << "[CloudConstructor] Using max_idx_distance: " << max_idx_distance_ << std::endl;
@@ -69,17 +77,21 @@ CloudConstructor::CloudConstructor(const MSI_RGR_Data* msi_data,
     AC_CoordKDTree_.setData(acclp_coords);
 
     // Initialize mapped indices and data structures
-    mapped_indices_.assign(H_ * W_, 0);
-    mapped_data_.assign(H_ * W_ * K_ * L_, std::numeric_limits<double>::quiet_NaN());
+    // mapped_indices_.assign(H_ * W_, 0);
+    // mapped_data_.assign(H_ * W_ * K_ * L_, std::numeric_limits<double>::quiet_NaN());
+    mapped_indices_.assign(H_out_ * W_out_, 0);
+    mapped_data_.assign(H_out_ * W_out_ * K_ * L_, std::numeric_limits<double>::quiet_NaN());
 }
 
 void CloudConstructor::construct() {
     std::cout << "[CloudConstructor] Starting cloud construction" << std::endl;
 
     // Iterate over each pixel in the MSI data
-    for (size_t i = 0; i < H_; ++i) {
-        for (size_t j = 0; j < W_; ++j) {
-            auto result = donor_selector_.findBestDonor({i, j});
+    for (size_t i = 0; i < H_out_; ++i) {
+        for (size_t j = 0; j < W_out_; ++j) {
+            size_t src_i = i + i_min_;
+            size_t src_j = j + j_min_;
+            auto result = donor_selector_.findBestDonor({src_i, src_j});
 
             if (!result.has_value()) {
                 mapped_indices_[i * W_ + j] = std::numeric_limits<size_t>::max();
@@ -101,6 +113,7 @@ void CloudConstructor::construct() {
 }
 
 void CloudConstructor::mapVariables(size_t i, size_t j, size_t ac_idx) {
+    size_t aux_idx = ac_idx + DEFF_IDX_;
     for (size_t k = 0; k < K_; ++k) {
         mapped_data_[flatIndex(i, j, k, 0)] = acclp_->cloud_effective_radius1[ac_idx][k];
         mapped_data_[flatIndex(i, j, k, 1)] = acclp_->cloud_effective_radius2[ac_idx][k];
@@ -110,5 +123,10 @@ void CloudConstructor::mapVariables(size_t i, size_t j, size_t ac_idx) {
         mapped_data_[flatIndex(i, j, k, 5)] = acclp_->cloud_phase2[ac_idx][k];
         mapped_data_[flatIndex(i, j, k, 6)] = acclp_->radar_lidar_flag[ac_idx][k];
         mapped_data_[flatIndex(i, j, k, 7)] = acclp_->height[ac_idx][k];
+        mapped_data_[flatIndex(i, j, k, 8)] = aux2d_->ozoneMassMixingRatio[aux_idx][k];
+        mapped_data_[flatIndex(i, j, k, 9)] = aux2d_->pressure[aux_idx][k];
+        mapped_data_[flatIndex(i, j, k, 10)] = aux2d_->specificHumidity[aux_idx][k];
+        mapped_data_[flatIndex(i, j, k, 11)] = aux2d_->temperature[aux_idx][k];
+        mapped_data_[flatIndex(i, j, k, 12)] = aux2d_->height[aux_idx][k];
     }
 }

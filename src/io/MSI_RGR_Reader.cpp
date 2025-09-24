@@ -1,4 +1,4 @@
-#include "io/MSI_RGR_Reader.hpp"
+#include "MSI_RGR_Reader.hpp"
 #include <highfive/H5File.hpp>
 #include <iostream>
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <string>
-#include "io/ObservationDataset.hpp"
+#include "ObservationDataset.hpp"
 
 class AC_CLP_Reader {
 public:

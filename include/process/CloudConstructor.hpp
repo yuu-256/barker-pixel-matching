@@ -1,10 +1,9 @@
 #pragma once
-
 #include <vector>
 #include <utility>
-#include "io/ObservationDataset.hpp"
-#include "process/DonorSelector.hpp"
-#include "process/KDTreeSearcher.hpp"
+#include "ObservationDataset.hpp"
+#include "DonorSelector.hpp"
+#include "KDTreeSearcher.hpp"
 
 class CloudConstructor {
 public:
@@ -13,10 +12,13 @@ public:
 
     CloudConstructor(const MSI_RGR_Data* msi, 
                      AC_CLP_Data* acclp,
+                     const AUX__2D_Data* aux2d,
                      size_t k_candidates = 100,
                      size_t max_idx_distance = 400, 
                      size_t num_vertical_levels = 0,
-                     size_t num_variables = 0);
+                     size_t num_variables = 0,
+                     size_t i_min = 0, size_t i_max = 0,
+                     size_t j_min = 0, size_t j_max = 0);
 
     // Processing function
     void construct();
@@ -39,6 +41,7 @@ private:
 
     const MSI_RGR_Data* msi_;
     AC_CLP_Data* acclp_;
+    const AUX__2D_Data* aux2d_;
 
     size_t k_candidates_;
     size_t max_idx_distance_;
@@ -56,8 +59,12 @@ private:
     size_t W_;  // Width of the MSI data
     size_t K_;  // Number of vertical levels
     size_t L_;  // Number of variables
+    size_t H_out_; // Height of the output data
+    size_t W_out_; // Width of the output data
+    size_t i_min_, i_max_, j_min_, j_max_; // Processing bounds
 
     // Results
     std::vector<size_t> mapped_indices_;  // mapped indices (i,j) -> (k,l)
     std::vector<double> mapped_data_;
+    size_t DEFF_IDX_ = 100; // AUX_IDX - ACCLP_IDX at the same point
 };

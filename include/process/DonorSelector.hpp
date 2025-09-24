@@ -3,7 +3,7 @@
 #include <vector>
 #include <array>
 #include <optional>
-#include "io/ObservationDataset.hpp"
+#include "ObservationDataset.hpp"
 #include "KDTreeSearcher.hpp"
 
 class DonorSelector {

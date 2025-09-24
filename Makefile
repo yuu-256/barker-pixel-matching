@@ -1,5 +1,5 @@
 CXX			 := g++
-CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Iinclude -Iexternal -Iexternal/HighFive/include
+CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Iinclude/io -Iinclude/process -Iexternal -Iexternal/HighFive/include
 
 HDF5_FLAGS := $(shell pkg-config --cflags hdf5)
 HDF5_LIBS	 := $(shell pkg-config --libs hdf5) -lhdf5_cpp
@@ -19,6 +19,7 @@ SRC_FILES := \
     $(SRC_DIR)/io/AC_CLP_Reader.cpp \
     $(SRC_DIR)/io/HDF5Writer.cpp \
     $(SRC_DIR)/io/MSI_RGR_Reader.cpp \
+		$(SRC_DIR)/io/AUX__2D_Reader.cpp \
     $(MAIN_DIR)/main.cpp
 
 OBJ_FILES := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))

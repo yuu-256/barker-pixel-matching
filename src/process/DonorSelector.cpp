@@ -1,5 +1,5 @@
-#include "process/DonorSelector.hpp"
-#include "process/KDTreeSearcher.hpp"
+#include "DonorSelector.hpp"
+#include "KDTreeSearcher.hpp"
 #include <cmath>
 #include <limits>
 #include <stdexcept>
