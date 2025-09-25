@@ -60,9 +60,9 @@ int main(int argc, char** argv) {
             "height",
             "ozoneMassMixingRatio",
             "pressure",
-            "spcificHumidity",
+            "specificHumidity",
             "temperature",
-            "height_aux2d"
+            "height_aux"
         };
 
         std::cout << "[main] Writing output to: " << output_filepath << std::endl;

@@ -123,10 +123,10 @@ void CloudConstructor::mapVariables(size_t i, size_t j, size_t ac_idx) {
         mapped_data_[flatIndex(i, j, k, 5)] = acclp_->cloud_phase2[ac_idx][k];
         mapped_data_[flatIndex(i, j, k, 6)] = acclp_->radar_lidar_flag[ac_idx][k];
         mapped_data_[flatIndex(i, j, k, 7)] = acclp_->height[ac_idx][k];
-        mapped_data_[flatIndex(i, j, k, 8)] = aux2d_->ozoneMassMixingRatio[aux_idx][k];
-        mapped_data_[flatIndex(i, j, k, 9)] = aux2d_->pressure[aux_idx][k];
-        mapped_data_[flatIndex(i, j, k, 10)] = aux2d_->specificHumidity[aux_idx][k];
-        mapped_data_[flatIndex(i, j, k, 11)] = aux2d_->temperature[aux_idx][k];
-        mapped_data_[flatIndex(i, j, k, 12)] = aux2d_->height[aux_idx][k];
+        mapped_data_[flatIndex(i, j, k, 8)] = aux2d_->ozoneMassMixingRatio[aux_idx][K_ - 1 - k];
+        mapped_data_[flatIndex(i, j, k, 9)] = aux2d_->pressure[aux_idx][K_ - 1 - k];
+        mapped_data_[flatIndex(i, j, k, 10)] = aux2d_->specificHumidity[aux_idx][K_ - 1 - k];
+        mapped_data_[flatIndex(i, j, k, 11)] = aux2d_->temperature[aux_idx][K_ - 1 - k];
+        mapped_data_[flatIndex(i, j, k, 12)] = aux2d_->height[aux_idx][K_ - 1 - k];
     }
 }
