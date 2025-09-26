@@ -114,24 +114,27 @@ int main(int argc, char** argv) {
             size_t w = idx % W_out;
             size_t src_h = h + i_min;
             size_t src_w = w + j_min;
-            size_t ac_idx = ac_mapped_indices[h * W + w];
-            size_t aux_idx = ac_idx + DIFF_IDX;
+            size_t ac_idx   = ac_mapped_indices[h * W_out + w];
+            size_t aux_idx  = ac_idx + DIFF_IDX;
+            if (aux_idx >= aux2d_data->surfacePressure.size()) {
+                throw std::out_of_range("AUX index out of range");
+            }
 
-            latitude_variable[idx] = msi_data->latitude[src_h][src_w];
+            latitude_variable[idx]  = msi_data->latitude[src_h][src_w];
             longitude_variable[idx] = msi_data->longitude[src_h][src_w];
 
             if (ac_idx == std::numeric_limits<size_t>::max()) {
-                surfacePressure_variable[idx] = std::numeric_limits<double>::quiet_NaN();
-                totalColumnOzone_variable[idx] = std::numeric_limits<double>::quiet_NaN();
+                surfacePressure_variable[idx]       = std::numeric_limits<double>::quiet_NaN();
+                totalColumnOzone_variable[idx]      = std::numeric_limits<double>::quiet_NaN();
                 totalColumnWaterVapor_variable[idx] = std::numeric_limits<double>::quiet_NaN();
-                day_night_flag_variable[idx] = -1;
-                land_water_flag_variable[idx] = -1;
+                day_night_flag_variable[idx]        = -1;
+                land_water_flag_variable[idx]       = -1;
             } else {
-                surfacePressure_variable[idx] = aux2d_data->surfacePressure[aux_idx];
-                totalColumnOzone_variable[idx] = aux2d_data->totalColumnOzone[aux_idx];
+                surfacePressure_variable[idx]       = aux2d_data->surfacePressure[aux_idx];
+                totalColumnOzone_variable[idx]      = aux2d_data->totalColumnOzone[aux_idx];
                 totalColumnWaterVapor_variable[idx] = aux2d_data->totalColumnWaterVapor[aux_idx];
-                day_night_flag_variable[idx] = aux2d_data->day_night_flag[aux_idx];
-                land_water_flag_variable[idx] = aux2d_data->land_water_flag[aux_idx];
+                day_night_flag_variable[idx]        = aux2d_data->day_night_flag[aux_idx];
+                land_water_flag_variable[idx]       = aux2d_data->land_water_flag[aux_idx];
             }
         }
         std::cout << "[main:debug] Writing auxiliary data completed" << std::endl;
