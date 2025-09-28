@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
 
         size_t DIFF_IDX = 100; // AUX_IDX - ACCLP_IDX at the same point
         size_t i_min = 2500, i_max = 4499;
+        // size_t i_min = 2500, i_max = 3499;
         size_t j_min = 0, j_max = msi_data->longitude[0].size() - 1;
         size_t H_out = i_max - i_min + 1;
         size_t W_out = j_max - j_min + 1;
