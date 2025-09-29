@@ -7,8 +7,7 @@
 #include "CloudConstructor.hpp"
 
 int main(int argc, char** argv) {
-    if (argc != 5) {
-        std::cerr << "Usage: " << argv[0] << " <MSI_RGR_File> <AC_CLP_File> <AUX_2D_File> <Output_HDF5_File>" << std::endl;
+    if (argc != 7) {
         return 1;
     }
 
@@ -17,6 +16,8 @@ int main(int argc, char** argv) {
         std::string acclp_filepath   = argv[2];
         std::string aux2d_filepath   = argv[3];
         std::string output_filepath  = argv[4];
+        std::string idx_min          = argv[5];
+        std::string idx_max          = argv[6];
 
         std::cout << "[main] Starting cloud construction processing" << std::endl;
 
@@ -35,7 +36,8 @@ int main(int argc, char** argv) {
         size_t num_variables = 13;
 
         size_t DIFF_IDX = 100; // AUX_IDX - ACCLP_IDX at the same point
-        size_t i_min = 2500, i_max = 4499;
+        size_t i_min = static_cast<size_t>(std::stoi(idx_min)); 
+        size_t i_max = static_cast<size_t>(std::stoi(idx_max));
         // size_t i_min = 2500, i_max = 3499;
         size_t j_min = 0, j_max = msi_data->longitude[0].size() - 1;
         size_t H_out = i_max - i_min + 1;
