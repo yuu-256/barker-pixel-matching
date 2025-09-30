@@ -71,9 +71,17 @@ int main(int argc, char** argv) {
         std::cout << "[main] Writing output to: " << output_filepath << std::endl;
         HDF5_Writer writer(output_filepath);
 
+        std::cout << "[main:debug] "
+                  << ", height: " << constructor.height()
+                  << ", width: " << constructor.width() 
+                  << ", H_out: " << H_out
+                  << ", W_out: " << W_out
+                  << "sizeof mapped indices: " << constructor.getMappedIndices().size() << std::endl;
+
         writer.writeDataset("mapped_indices",
                             constructor.getMappedIndices(),
                             {constructor.height(), constructor.width()});
+
         std::cout << "[main] Writing mapped indices completed" << std::endl;
         std::cout << "[main] Writing mapped data" << std::endl;
 
