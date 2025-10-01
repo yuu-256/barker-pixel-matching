@@ -21,31 +21,29 @@ CloudConstructor::CloudConstructor(const MSI_RGR_Data* msi_data,
       MSI_CoordKDTree_(),
       donor_selector_(msi_data, acclp_data, {}, k_candidates, max_idx_distance,
                       AC_LogSpectralKDTree_, AC_CoordKDTree_, MSI_CoordKDTree_),
-      H_(msi_data->longitude.size()),
-      W_(msi_data->longitude[0].size()),
+      H_(msi_data->longitude.nx),
+      W_(msi_data->longitude.ny),
       K_(num_vertical_levels),
       L_(num_variables),
       H_out_(i_max - i_min + 1),
       W_out_(j_max - j_min + 1),
       i_min_(i_min), i_max_(i_max),
       j_min_(j_min), j_max_(j_max)
-{
-    std::cout << "[CloudConstructor] Using k_candidates: " << k_candidates_ << std::endl;
-    std::cout << "[CloudConstructor] Using max_idx_distance: " << max_idx_distance_ << std::endl;
 
+{
     // MSI Coordinate KDTree //
     std::vector<KDTreeSearcherCoord::Point> msi_coords;
     msi_coords.reserve(H_ * W_);
     for (size_t i = 0; i < H_; ++i) {
         for (size_t j = 0; j < W_; ++j) {
-            msi_coords.push_back({msi_->longitude[i][j], msi_->latitude[i][j]});
+            msi_coords.push_back({msi_->longitude(i, j), msi_->latitude(i, j)});
         }
     }
     MSI_CoordKDTree_.setData(msi_coords);
 
     // Copy nearest MSI radiance data to AC //
     size_t num_ac_points = acclp_->longitude.size();
-    size_t num_bands = msi_->radiance[0][0].size();
+    size_t num_bands = msi_->radiance.nx;
     acclp_->radiance.resize(num_ac_points);
 
     for (size_t i = 0; i < num_ac_points; ++i) {
@@ -61,7 +59,7 @@ CloudConstructor::CloudConstructor(const MSI_RGR_Data* msi_data,
 
         KDTreeSearcherBand::Spectrum spectrum;
         for (size_t b = 0; b < num_bands; ++b) {
-            spectrum[b] = std::log(msi_->radiance[msi_i][msi_j][b]);
+            spectrum[b] = std::log(msi_->radiance(b, msi_i, msi_j));
         }
         acclp_->radiance[i] = spectrum;
     }

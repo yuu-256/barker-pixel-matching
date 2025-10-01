@@ -61,7 +61,10 @@ private:
     size_t L_;  // Number of variables
     size_t H_out_; // Height of the output data
     size_t W_out_; // Width of the output data
-    size_t i_min_, i_max_, j_min_, j_max_; // Processing bounds
+    size_t i_min_; 
+    size_t i_max_;
+    size_t j_min_; 
+    size_t j_max_;
 
     // Results
     std::vector<size_t> mapped_indices_;  // mapped indices (i,j) -> (k,l)

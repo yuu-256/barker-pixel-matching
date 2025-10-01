@@ -1,7 +1,7 @@
 CXX			 := g++
-CXXFLAGS := -std=c++17 -O2 -Wall -Wextra -Iinclude/io -Iinclude/process -Iexternal -Iexternal/HighFive/include
+CXXFLAGS 	 := -std=c++17 -O2 -Wall -Wextra -Iinclude/io -Iinclude/process -Iexternal -Iexternal/HighFive/include
 
-HDF5_FLAGS := $(shell pkg-config --cflags hdf5)
+HDF5_FLAGS 	 := $(shell pkg-config --cflags hdf5)
 HDF5_LIBS	 := $(shell pkg-config --libs hdf5) -lhdf5_cpp
 
 SRC_DIR		 := src
@@ -16,10 +16,11 @@ TARGET := $(BIN_DIR)/cloud_constructor
 SRC_FILES := \
     $(SRC_DIR)/process/CloudConstructor.cpp \
     $(SRC_DIR)/process/DonorSelector.cpp \
+	$(SRC_DIR)/process/BarkerPixelMatching.cpp \
     $(SRC_DIR)/io/AC_CLP_Reader.cpp \
     $(SRC_DIR)/io/HDF5Writer.cpp \
     $(SRC_DIR)/io/MSI_RGR_Reader.cpp \
-		$(SRC_DIR)/io/AUX__2D_Reader.cpp \
+	$(SRC_DIR)/io/AUX__2D_Reader.cpp \
     $(MAIN_DIR)/main.cpp
 
 OBJ_FILES := $(patsubst %.cpp, $(BUILD_DIR)/%.o, $(SRC_FILES))
@@ -36,6 +37,3 @@ $(BUILD_DIR)/%.o: %.cpp
 
 clean:
 	rm -rf $(BUILD_DIR) $(BIN_DIR)
-
-run: $(TARGET)
-	./$(TARGET) input_msi.h5 input_acclp.h5 output.h5
