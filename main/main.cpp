@@ -8,6 +8,7 @@
 
 int main(int argc, char** argv) {
     if (argc != 7) {
+        std::cerr << "Usage: " << argv[0] << " <MSI_RGR_File> <AC_CLP_File> <AUX_2D_File> <Output_HDF5_File> <Index_Min> <Index_Max>" << std::endl;
         return 1;
     }
 
